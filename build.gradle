@@ -1,0 +1,111 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+    id 'jacoco'
+    id "org.sonarqube" version "2.7.1"
+}
+
+group 'org.padler'
+version '1.0'
+
+sourceCompatibility = 1.8
+
+test {
+    useJUnitPlatform()
+}
+
+jacoco {
+    toolVersion = "0.8.4"
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.hamcrest:hamcrest-core:1.3'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectName", "Natorder"
+        property "sonar.projectKey", "616slayer616_natorder"
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+    archiveClassifier = 'sources'
+}
+
+task javadocJar(type: Jar) {
+    from javadoc
+    archiveClassifier = 'javadoc'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'natorder'
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            pom {
+                name = 'Natorder'
+                description = 'Java Natural Order comparator'
+                url = 'http://github.com/616slayer616/natorder'
+                licenses {
+                    license {
+                        name = 'License'
+                        url = 'https://github.com/616slayer616/natorder/blob/master/LICENSE'
+                    }
+                }
+                developers {
+                    developer {
+                        id = '616slayer616'
+                        name = 'Patrick Adler'
+                        email = 'patrick@padler.org'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/616slayer616/natorder.git'
+                    developerConnection = 'scm:git:ssh://github.com/616slayer616/natorder.git'
+                    url = 'http://github.com/616slayer616/natorder'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username = project.hasProperty("sonatypeUsername") ? sonatypeUsername : ""
+                password = project.hasProperty("sonatypePassword") ? sonatypePassword : ""
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}
+
+
+javadoc {
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}

@@ -1,0 +1,10 @@
+language: groovy
+jdk:
+  - openjdk11
+addons:
+  sonarcloud:
+    organization: "616slayer616-github"
+    token: $sonarKey
+script:
+  - ./gradlew build -s
+  - ./gradlew sonarqube
