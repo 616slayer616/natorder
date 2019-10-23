@@ -42,7 +42,7 @@ org.padler.natorder.NaturalOrderComparator.java -- Perform 'natural order' compa
 
 ### Gradle
 ```
-implementation 'org.padler:natorder:1.0'
+implementation 'org.padler:natorder:1.0.1'
 ```
 
 ### Maven
@@ -50,7 +50,7 @@ implementation 'org.padler:natorder:1.0'
 <dependency>
   <groupId>org.padler</groupId>
   <artifactId>natorder</artifactId>
-  <version>1.0</version>
+  <version>1.0.1</version>
 </dependency>
 ```
 

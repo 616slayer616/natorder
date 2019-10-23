@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class NaturalOrderComparatorTest {
 
-    private NaturalOrderComparator naturalOrderComparator = new NaturalOrderComparator();
+    private NaturalOrderComparator naturalOrderComparator = new NaturalOrderComparator(true);
 
     private List<String> sorted = Arrays.asList("1-2", "1-02", "1-20", "10-20", "fred", "jane", "pic01",
             "pic2", "pic02", "pic02a", "pic3", "pic4", "pic 4 else", "pic 5", "pic05",
@@ -128,6 +128,56 @@ class NaturalOrderComparatorTest {
     void floatsWithCommas() {
         List<String> unSorted = Arrays.asList("0,9", "1,0c", "1,2", "1,3", "0,6", "1,1", "0,7", "0,3", "1,0b", "1,0", "0,8");
         List<String> sorted = Arrays.asList("0,3", "0,6", "0,7", "0,8", "0,9", "1,0", "1,0b", "1,0c", "1,1", "1,2", "1,3");
+
+        unSorted.sort(naturalOrderComparator);
+
+        assertThat(unSorted, is(sorted));
+    }
+
+    @Test
+    void wikipediaTest() {
+        List<String> unSorted = Arrays.asList("z11", "z2");
+        List<String> sorted = Arrays.asList("z2", "z11");
+
+        unSorted.sort(naturalOrderComparator);
+
+        assertThat(unSorted, is(sorted));
+    }
+
+    @Test
+    void wikipediaTestStable() {
+        List<String> unSorted = Arrays.asList("z2", "z11");
+        List<String> sorted = Arrays.asList("z2", "z11");
+
+        unSorted.sort(naturalOrderComparator);
+
+        assertThat(unSorted, is(sorted));
+    }
+
+    @Test
+    void files() {
+        List<String> unSorted = Arrays.asList("file1.txt", "file2.txt", "file10.txt");
+        List<String> sorted = Arrays.asList("file1.txt", "file2.txt", "file10.txt");
+
+        unSorted.sort(naturalOrderComparator);
+
+        assertThat(unSorted, is(sorted));
+    }
+
+    @Test
+    void versions() {
+        List<String> unSorted = Arrays.asList("1.2.9.1", "1.2.10.5");
+        List<String> sorted = Arrays.asList("1.2.9.1", "1.2.10.5");
+
+        unSorted.sort(naturalOrderComparator);
+
+        assertThat(unSorted, is(sorted));
+    }
+
+    @Test
+    void versionsStable() {
+        List<String> unSorted = Arrays.asList("1.2.10.5", "1.2.9.1");
+        List<String> sorted = Arrays.asList("1.2.9.1", "1.2.10.5");
 
         unSorted.sort(naturalOrderComparator);
 
