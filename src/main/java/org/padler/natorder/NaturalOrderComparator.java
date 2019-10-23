@@ -4,6 +4,17 @@ import java.util.Comparator;
 
 public class NaturalOrderComparator implements Comparator<String> {
 
+    private boolean caseSensitive;
+
+    public NaturalOrderComparator() {
+        this.caseSensitive = false;
+    }
+
+    public NaturalOrderComparator(boolean caseSensitive) {
+        this.caseSensitive = caseSensitive;
+    }
+
+
     private int compareRight(String a, String b) {
         int bias = 0;
         int ia = 0;
@@ -118,7 +129,10 @@ public class NaturalOrderComparator implements Comparator<String> {
     }
 
     private char charAt(String s, int i) {
-        return i >= s.length() ? 0 : s.charAt(i);
+        if (caseSensitive)
+            return i >= s.length() ? 0 : s.charAt(i);
+        else
+            return i >= s.length() ? 0 : Character.toUpperCase(s.charAt(i));
     }
 
 }

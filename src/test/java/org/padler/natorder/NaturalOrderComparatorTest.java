@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class NaturalOrderComparatorTest {
 
-    private NaturalOrderComparator naturalOrderComparator = new NaturalOrderComparator();
+    private NaturalOrderComparator naturalOrderComparator = new NaturalOrderComparator(true);
 
     private List<String> sorted = Arrays.asList("1-2", "1-02", "1-20", "10-20", "fred", "jane", "pic01",
             "pic2", "pic02", "pic02a", "pic3", "pic4", "pic 4 else", "pic 5", "pic05",
