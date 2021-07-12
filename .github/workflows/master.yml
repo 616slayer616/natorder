@@ -1,0 +1,41 @@
+name: 'Develop'
+
+on:
+  push:
+    branches:
+      - 'master'
+
+jobs:
+  build-feature:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: git checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: build
+        run: ./gradlew clean assemble
+
+      - name: test
+        run: ./gradlew check
+
+      - name: sonar analysis
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew sonarqube
+
+      - name: Decode secret key
+        run: |
+          echo "${{secrets.SIGNING_SECRET_KEY_RING_FILE}}" > secring.gpg.b64
+          base64 -d secring.gpg.b64 > secring.gpg
+
+      - name: Publish to the Maven Central Repository
+        run: ./gradlew publish -Psigning.keyId=${{secrets.OSSRH_GPG_SECRET_KEY_ID}} -Psigning.password=${{secrets.OSSRH_GPG_SECRET_KEY_PASSWORD}} -Psigning.secretKeyRingFile=$(echo secring.gpg)
+        env:
+          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
