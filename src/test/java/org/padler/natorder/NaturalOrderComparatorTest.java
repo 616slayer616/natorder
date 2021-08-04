@@ -12,13 +12,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class NaturalOrderComparatorTest {
 
-    private NaturalOrderComparator naturalOrderComparator = new NaturalOrderComparator(true);
+    private final NaturalOrderComparator naturalOrderComparator = new NaturalOrderComparator(true);
 
-    private List<String> sorted = Arrays.asList("1-2", "1-02", "1-20", "10-20", "fred", "jane", "pic01",
+    private final List<String> sorted = Arrays.asList("1-2", "1-02", "1-20", "10-20", "fred", "jane", "pic01",
             "pic2", "pic02", "pic02a", "pic3", "pic4", "pic 4 else", "pic 5", "pic05",
             "pic 5 something", "pic 6", "pic   7", "pic100", "pic100a", "pic120", "pic121",
             "pic02000", "tom", "x2-g8", "x2-y7", "x2-y08", "x8-y8");
-    private List<String> unsorted = Arrays.asList("1-2", "1-02", "1-20", "10-20", "fred", "jane", "pic01",
+    private final List<String> unsorted = Arrays.asList("1-2", "1-02", "1-20", "10-20", "fred", "jane", "pic01",
             "pic2", "pic02", "pic02a", "pic3", "pic4", "pic 4 else", "pic 5", "pic05",
             "pic 5 something", "pic 6", "pic   7", "pic100", "pic100a", "pic120", "pic121",
             "pic02000", "tom", "x2-g8", "x2-y7", "x2-y08", "x8-y8");
@@ -177,6 +177,36 @@ class NaturalOrderComparatorTest {
     void versionsStable() {
         List<String> unsorted = Arrays.asList("1.2.10.5", "1.2.9.1");
         List<String> sorted = Arrays.asList("1.2.9.1", "1.2.10.5");
+
+        unsorted.sort(naturalOrderComparator);
+
+        assertThat(unsorted).isEqualTo(sorted);
+    }
+
+    @Test
+    void ignoreWhiteSpaceText() {
+        List<String> unsorted = Arrays.asList("The A", "The X", "The a", "Theme", "The x");
+        List<String> sorted = Arrays.asList("The a", "The A", "Theme", "The x", "The X");
+
+        unsorted.sort(naturalOrderComparator);
+
+        assertThat(unsorted).isEqualTo(sorted);
+    }
+
+    @Test
+    void ignoreWhiteSpaceNumber() {
+        List<String> unsorted = Arrays.asList("1", "1 000 000", "10", "10 000", "10 000 000", "100", "100 000", "1000");
+        List<String> sorted = Arrays.asList("1", "10", "100", "1000", "10 000", "100 000", "1 000 000", "10 000 000");
+
+        unsorted.sort(naturalOrderComparator);
+
+        assertThat(unsorted).isEqualTo(sorted);
+    }
+
+    @Test
+    void sortTime() {
+        List<String> unsorted = Arrays.asList("10:01:00", "10:09:00", "10:10:00", "10:00:00", "10:00:01");
+        List<String> sorted = Arrays.asList("10:00:00", "10:00:01", "10:01:00", "10:09:00", "10:10:00");
 
         unsorted.sort(naturalOrderComparator);
 
