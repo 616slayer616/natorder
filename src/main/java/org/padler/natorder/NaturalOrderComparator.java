@@ -24,31 +24,11 @@ public class NaturalOrderComparator implements Comparator<String> {
         // both numbers to know that they have the same magnitude, so we
         // remember it in BIAS.
         for (; ; i++) {
-            Character caBefore = null;
             char ca = charAt(a, i);
             char cb = charAt(b, i);
-            Character cbBefore = null;
 
-            if (i != 0) {
-                caBefore = charAt(a, i - 1);
-            }
-
-            if (i != 0) {
-                cbBefore = charAt(b, i - 1);
-            }
-
-            boolean isADigit;
-            boolean isBDigit;
-            if (caBefore != null && isDigit(caBefore)) {
-                isADigit = isDigitOrInsideNumber(ca);
-            } else {
-                isADigit = isDigit(ca);
-            }
-            if (cbBefore != null && isDigit(cbBefore)) {
-                isBDigit = isDigitOrInsideNumber(cb);
-            } else {
-                isBDigit = isDigit(cb);
-            }
+            boolean isADigit = isDigit(ca);
+            boolean isBDigit = isDigit(cb);
 
             if (!isADigit && !isBDigit) {
                 return bias;
@@ -135,11 +115,7 @@ public class NaturalOrderComparator implements Comparator<String> {
     }
 
     private boolean isDigit(char c) {
-        return Character.isDigit(c) || c == '.' || c == ',';
-    }
-
-    private boolean isDigitOrInsideNumber(char c) {
-        return isDigit(c) || c == ' ' || c == ':';
+        return Character.isDigit(c) || c == '.' || c == ',' || c == ':';
     }
 
     private int compareEqual(String a, String b, int nza, int nzb) {
