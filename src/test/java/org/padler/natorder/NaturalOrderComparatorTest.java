@@ -184,26 +184,6 @@ class NaturalOrderComparatorTest {
     }
 
     @Test
-    void ignoreWhiteSpaceText() {
-        List<String> unsorted = Arrays.asList("The A", "The X", "The a", "Theme", "The x");
-        List<String> sorted = Arrays.asList("The a", "The A", "Theme", "The x", "The X");
-
-        unsorted.sort(naturalOrderComparator);
-
-        assertThat(unsorted).isEqualTo(sorted);
-    }
-
-    @Test
-    void ignoreWhiteSpaceNumber() {
-        List<String> unsorted = Arrays.asList("1", "1 000 000", "10", "10 000", "10 000 000", "100", "100 000", "1000");
-        List<String> sorted = Arrays.asList("1", "10", "100", "1000", "10 000", "100 000", "1 000 000", "10 000 000");
-
-        unsorted.sort(naturalOrderComparator);
-
-        assertThat(unsorted).isEqualTo(sorted);
-    }
-
-    @Test
     void sortTime() {
         List<String> unsorted = Arrays.asList("10:01:00", "10:09:00", "10:10:00", "10:00:00", "10:00:01");
         List<String> sorted = Arrays.asList("10:00:00", "10:00:01", "10:01:00", "10:09:00", "10:10:00");
