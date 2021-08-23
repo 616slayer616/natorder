@@ -193,4 +193,14 @@ class NaturalOrderComparatorTest {
         assertThat(unsorted).isEqualTo(sorted);
     }
 
+    @Test
+    void sortColon() {
+        List<String> unsorted = Arrays.asList("File 2: file", "File 1: first", "File 2: another", "File 1: second_first");
+        List<String> sorted = Arrays.asList("File 1: first", "File 1: second_first", "File 2: another", "File 2: file");
+
+        unsorted.sort(naturalOrderComparator);
+
+        assertThat(unsorted).isEqualTo(sorted);
+    }
+
 }
