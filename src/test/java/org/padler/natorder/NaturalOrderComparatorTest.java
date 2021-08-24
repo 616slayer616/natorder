@@ -12,13 +12,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class NaturalOrderComparatorTest {
 
-    private NaturalOrderComparator naturalOrderComparator = new NaturalOrderComparator(true);
+    private final NaturalOrderComparator naturalOrderComparator = new NaturalOrderComparator(true);
 
-    private List<String> sorted = Arrays.asList("1-2", "1-02", "1-20", "10-20", "fred", "jane", "pic01",
+    private final List<String> sorted = Arrays.asList("1-2", "1-02", "1-20", "10-20", "fred", "jane", "pic01",
             "pic2", "pic02", "pic02a", "pic3", "pic4", "pic 4 else", "pic 5", "pic05",
             "pic 5 something", "pic 6", "pic   7", "pic100", "pic100a", "pic120", "pic121",
             "pic02000", "tom", "x2-g8", "x2-y7", "x2-y08", "x8-y8");
-    private List<String> unsorted = Arrays.asList("1-2", "1-02", "1-20", "10-20", "fred", "jane", "pic01",
+    private final List<String> unsorted = Arrays.asList("1-2", "1-02", "1-20", "10-20", "fred", "jane", "pic01",
             "pic2", "pic02", "pic02a", "pic3", "pic4", "pic 4 else", "pic 5", "pic05",
             "pic 5 something", "pic 6", "pic   7", "pic100", "pic100a", "pic120", "pic121",
             "pic02000", "tom", "x2-g8", "x2-y7", "x2-y08", "x8-y8");
@@ -177,6 +177,26 @@ class NaturalOrderComparatorTest {
     void versionsStable() {
         List<String> unsorted = Arrays.asList("1.2.10.5", "1.2.9.1");
         List<String> sorted = Arrays.asList("1.2.9.1", "1.2.10.5");
+
+        unsorted.sort(naturalOrderComparator);
+
+        assertThat(unsorted).isEqualTo(sorted);
+    }
+
+    @Test
+    void sortTime() {
+        List<String> unsorted = Arrays.asList("10:01:00", "10:09:00", "10:10:00", "10:00:00", "10:00:01");
+        List<String> sorted = Arrays.asList("10:00:00", "10:00:01", "10:01:00", "10:09:00", "10:10:00");
+
+        unsorted.sort(naturalOrderComparator);
+
+        assertThat(unsorted).isEqualTo(sorted);
+    }
+
+    @Test
+    void sortColon() {
+        List<String> unsorted = Arrays.asList("File 2: file", "File 1: first", "File 2: another", "File 1: second_first");
+        List<String> sorted = Arrays.asList("File 1: first", "File 1: second_first", "File 2: another", "File 2: file");
 
         unsorted.sort(naturalOrderComparator);
 
