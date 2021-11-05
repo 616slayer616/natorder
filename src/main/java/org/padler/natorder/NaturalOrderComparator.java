@@ -123,7 +123,7 @@ public class NaturalOrderComparator implements Comparator<String> {
             return nza - nzb;
 
         if (a.length() == b.length())
-            return a.compareTo(b);
+            return caseSensitive ? a.compareTo(b) : a.compareToIgnoreCase(b);
 
         return a.length() - b.length();
     }
