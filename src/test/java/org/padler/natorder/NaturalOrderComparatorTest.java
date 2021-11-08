@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class NaturalOrderComparatorTest {
 
     private final NaturalOrderComparator naturalOrderComparator = new NaturalOrderComparator(true);
+    private final NaturalOrderComparator naturalInsensitiveComparator = new NaturalOrderComparator(false);
 
     private final List<String> sorted = Arrays.asList("1-2", "1-02", "1-20", "10-20", "fred", "jane", "pic01",
             "pic2", "pic02", "pic02a", "pic3", "pic4", "pic 4 else", "pic 5", "pic05",
@@ -199,6 +200,16 @@ class NaturalOrderComparatorTest {
         List<String> sorted = Arrays.asList("File 1: first", "File 1: second_first", "File 2: another", "File 2: file");
 
         unsorted.sort(naturalOrderComparator);
+
+        assertThat(unsorted).isEqualTo(sorted);
+    }
+
+    @Test
+    void sortInsensitive() {
+        List<String> unsorted = Arrays.asList("DEF", "abc", "def", "AbC", "123", "12");
+        List<String> sorted = Arrays.asList("12", "123", "abc", "AbC", "DEF", "def");
+
+        unsorted.sort(naturalInsensitiveComparator);
 
         assertThat(unsorted).isEqualTo(sorted);
     }
