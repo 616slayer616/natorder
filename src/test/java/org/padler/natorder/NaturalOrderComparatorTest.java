@@ -116,8 +116,48 @@ class NaturalOrderComparatorTest {
 
     @Test
     void floats() {
-        List<String> unsorted = Arrays.asList("0.9", "1.0c", "1.2", "1.3", "0.6", "1.1", "0.7", "0.3", "1.0b", "1.0", "0.8");
-        List<String> sorted = Arrays.asList("0.3", "0.6", "0.7", "0.8", "0.9", "1.0", "1.0b", "1.0c", "1.1", "1.2", "1.3");
+        List<String> unsorted = Arrays.asList("0.9", "1.0c", "1.2", "1.3", "0.6", "1.1", "0.7", "0.3", "1.0b", "1.0", "0.8", "0.00003");
+        List<String> sorted = Arrays.asList("0.00003", "0.3", "0.6", "0.7", "0.8", "0.9", "1.0", "1.0b", "1.0c", "1.1", "1.2", "1.3");
+
+        unsorted.sort(naturalOrderComparator);
+
+        assertThat(unsorted).isEqualTo(sorted);
+    }
+
+    @Test
+    void prefiedFloats() {
+        List<String> unsorted = Arrays.asList("l0.3", "l0.003");
+        List<String> sorted = Arrays.asList("l0.003", "l0.3");
+
+        unsorted.sort(naturalOrderComparator);
+
+        assertThat(unsorted).isEqualTo(sorted);
+    }
+
+    @Test
+    void suffixedFloats() {
+        List<String> unsorted = Arrays.asList("0.3m", "0.003m");
+        List<String> sorted = Arrays.asList("0.003m", "0.3m");
+
+        unsorted.sort(naturalOrderComparator);
+
+        assertThat(unsorted).isEqualTo(sorted);
+    }
+
+    @Test
+    void preAndSuffixedFloats() {
+        List<String> unsorted = Arrays.asList("l0.3m", "l0.003m");
+        List<String> sorted = Arrays.asList("l0.003m", "l0.3m");
+
+        unsorted.sort(naturalOrderComparator);
+
+        assertThat(unsorted).isEqualTo(sorted);
+    }
+
+    @Test
+    void leadingZeroes() {
+        List<String> unsorted = Arrays.asList("0003", "03");
+        List<String> sorted = Arrays.asList("03", "0003");
 
         unsorted.sort(naturalOrderComparator);
 
