@@ -1,6 +1,7 @@
 package org.padler.natorder;
 
 import java.util.Comparator;
+import java.util.Objects;
 
 public class NaturalOrderComparator implements Comparator<String> {
 
@@ -57,6 +58,8 @@ public class NaturalOrderComparator implements Comparator<String> {
         int nzb;
         char ca;
         char cb;
+        StringBuilder numberA = new StringBuilder();
+        StringBuilder numberB = new StringBuilder();
 
         while (true) {
             // Only count the number of zeroes leading the last number compared
@@ -69,6 +72,7 @@ public class NaturalOrderComparator implements Comparator<String> {
             while (Character.isSpaceChar(ca) || ca == '0') {
                 if (ca == '0') {
                     nza++;
+                    numberA.append(ca);
                 } else {
                     // Only count consecutive zeroes
                     nza = 0;
@@ -81,6 +85,7 @@ public class NaturalOrderComparator implements Comparator<String> {
             while (Character.isSpaceChar(cb) || cb == '0') {
                 if (cb == '0') {
                     nzb++;
+                    numberB.append(cb);
                 } else {
                     // Only count consecutive zeroes
                     nzb = 0;
@@ -88,6 +93,13 @@ public class NaturalOrderComparator implements Comparator<String> {
 
                 ++ib;
                 cb = charAt(o2, ib);
+            }
+
+            if (isDigit(ca)) {
+                numberA.append(ca);
+            }
+            if (isDigit(cb)) {
+                numberB.append(cb);
             }
 
             // Process run of digits
@@ -100,7 +112,7 @@ public class NaturalOrderComparator implements Comparator<String> {
 
             if (ca == 0 && cb == 0) {
                 // The strings compare the same. Use other means of comparison
-                return compareEqual(o1, o2, nza, nzb);
+                return compareEqual(o1, o2, nza, nzb, numberA.toString(), numberB.toString());
             }
             if (ca < cb) {
                 return -1;
@@ -118,7 +130,14 @@ public class NaturalOrderComparator implements Comparator<String> {
         return Character.isDigit(c) || c == '.' || c == ',' || c == ':';
     }
 
-    private int compareEqual(String a, String b, int nza, int nzb) {
+    private int compareEqual(String a, String b, int nza, int nzb, String numberA, String numberB) {
+        if (!Objects.equals(numberA, numberB)) {
+            double na = Double.parseDouble(numberA);
+            double nb = Double.parseDouble(numberB);
+            if (!Objects.equals(na, nb))
+                return Double.compare(na, nb);
+        }
+
         if (nza - nzb != 0)
             return nza - nzb;
 
