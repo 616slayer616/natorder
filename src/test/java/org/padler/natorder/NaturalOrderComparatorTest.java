@@ -274,4 +274,23 @@ class NaturalOrderComparatorTest {
         assertThat(unsorted).isEqualTo(sorted);
     }
 
+    @Test
+    void hypehns() {
+        List<String> unsorted = Arrays.asList( "a-1", "a1-1", "a2-1");
+        List<String> sorted = Arrays.asList("a-1", "a1-1", "a2-1");
+
+        unsorted.sort(naturalInsensitiveComparator);
+
+        assertThat(unsorted).isEqualTo(sorted);
+    }
+
+    @Test
+    void underscores() {
+        List<String> unsorted = Arrays.asList( "a_1", "a1_1", "a2_1");
+        List<String> sorted = Arrays.asList("a_1", "a1_1", "a2_1");
+
+        unsorted.sort(naturalInsensitiveComparator);
+
+        assertThat(unsorted).isEqualTo(sorted);
+    }
 }
