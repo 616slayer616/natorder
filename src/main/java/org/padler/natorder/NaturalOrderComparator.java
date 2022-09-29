@@ -28,8 +28,8 @@ public class NaturalOrderComparator implements Comparator<String> {
             char ca = charAt(a, i);
             char cb = charAt(b, i);
 
-            boolean isADigit = isDigit(ca);
-            boolean isBDigit = isDigit(cb);
+            boolean isADigit = isDigitOrSeparator(ca);
+            boolean isBDigit = isDigitOrSeparator(cb);
 
             if (!isADigit && !isBDigit) {
                 return bias;
@@ -69,7 +69,7 @@ public class NaturalOrderComparator implements Comparator<String> {
             cb = charAt(o2, ib);
 
             // skip over leading spaces or zeros
-            while (Character.isSpaceChar(ca) || ca == '0') {
+            while (isSpaceOrSeparatorOrEmpty(ca)) {
                 if (ca == '0') {
                     nza++;
                     numberA.append(ca);
@@ -82,7 +82,7 @@ public class NaturalOrderComparator implements Comparator<String> {
                 ca = charAt(o1, ia);
             }
 
-            while (Character.isSpaceChar(cb) || cb == '0') {
+            while (isSpaceOrSeparatorOrEmpty(cb)) {
                 if (cb == '0') {
                     nzb++;
                     numberB.append(cb);
@@ -95,15 +95,15 @@ public class NaturalOrderComparator implements Comparator<String> {
                 cb = charAt(o2, ib);
             }
 
-            if (isDigit(ca)) {
+            if (isDigitOrSeparator(ca)) {
                 numberA.append(ca);
             }
-            if (isDigit(cb)) {
+            if (isDigitOrSeparator(cb)) {
                 numberB.append(cb);
             }
 
             // Process run of digits
-            if (Character.isDigit(ca) && Character.isDigit(cb)) {
+            if (isDigit(ca) && isDigit(cb)) {
                 int bias = compareRight(o1.substring(ia), o2.substring(ib));
                 if (bias != 0) {
                     return bias;
@@ -127,7 +127,23 @@ public class NaturalOrderComparator implements Comparator<String> {
     }
 
     private boolean isDigit(char c) {
-        return Character.isDigit(c) || c == '.' || c == ',' || c == ':';
+        return Character.isDigit(c);
+    }
+
+    private boolean isDigitOrSeparator(char c) {
+        return isDigit(c) || c=='.' || c==',' || c==':';
+    }
+
+    private boolean isSpaceChar(char c) {
+        return Character.isSpaceChar(c);
+    }
+
+    private boolean isSpaceOrSeparator(char c) {
+        return isSpaceChar(c) || c=='_';
+    }
+
+    private boolean isSpaceOrSeparatorOrEmpty(char c) {
+        return isSpaceOrSeparator(c) || c=='0';
     }
 
     private int compareEqual(String a, String b, int nza, int nzb, String numberA, String numberB) {
