@@ -3,7 +3,7 @@ plugins {
     id 'maven-publish'
     id 'signing'
     id 'jacoco'
-    id "org.sonarqube" version "3.3"
+    id "org.sonarqube" version "3.4.0.2513"
 }
 
 group 'org.padler'
@@ -18,12 +18,12 @@ test {
 test.finalizedBy jacocoTestReport
 
 jacoco {
-    toolVersion = "0.8.7"
+    toolVersion = "0.8.8"
 }
 
 jacocoTestReport {
     reports {
-        xml.enabled true
+        xml.required = true
     }
 }
 
@@ -33,11 +33,11 @@ repositories {
 
 dependencies {
     // https://mvnrepository.com/artifact/org.assertj/assertj-core
-    testImplementation 'org.assertj:assertj-core:3.21.0'
+    testImplementation 'org.assertj:assertj-core:3.23.1'
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.1'
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
 }
 
 sonarqube {
