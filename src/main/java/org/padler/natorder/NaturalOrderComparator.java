@@ -69,7 +69,7 @@ public class NaturalOrderComparator implements Comparator<String> {
             cb = charAt(o2, ib);
 
             // skip over leading spaces or zeros
-            while (isSpaceOrSeparatorOrEmpty(ca)) {
+            while (isSpaceOrSeparatorOrEmptyOrSpecial(ca)) {
                 if (ca == '0') {
                     nza++;
                     numberA.append(ca);
@@ -82,7 +82,7 @@ public class NaturalOrderComparator implements Comparator<String> {
                 ca = charAt(o1, ia);
             }
 
-            while (isSpaceOrSeparatorOrEmpty(cb)) {
+            while (isSpaceOrSeparatorOrEmptyOrSpecial(cb)) {
                 if (cb == '0') {
                     nzb++;
                     numberB.append(cb);
@@ -131,7 +131,7 @@ public class NaturalOrderComparator implements Comparator<String> {
     }
 
     private boolean isDigitOrSeparator(char c) {
-        return isDigit(c) || c=='.' || c==',' || c==':';
+        return isDigit(c) || c == '.' || c == ',' || c == ':';
     }
 
     private boolean isSpaceChar(char c) {
@@ -139,19 +139,23 @@ public class NaturalOrderComparator implements Comparator<String> {
     }
 
     private boolean isSpaceOrSeparator(char c) {
-        return isSpaceChar(c) || c=='_';
+        return isSpaceChar(c) || c == '_';
     }
 
-    private boolean isSpaceOrSeparatorOrEmpty(char c) {
-        return isSpaceOrSeparator(c) || c=='0';
+    private boolean isSpaceOrSeparatorOrEmptyOrSpecial(char c) {
+        return isSpaceOrSeparator(c) || c == '0' || c == '#' || c == '$';
     }
 
     private int compareEqual(String a, String b, int nza, int nzb, String numberA, String numberB) {
         if (!Objects.equals(numberA, numberB)) {
+            try {
             double na = Double.parseDouble(numberA);
             double nb = Double.parseDouble(numberB);
             if (!Objects.equals(na, nb))
                 return Double.compare(na, nb);
+        }catch (NumberFormatException e) {
+                // there were special characters so it is NaN
+            }
         }
 
         if (nza - nzb != 0)
