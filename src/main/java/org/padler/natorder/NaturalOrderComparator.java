@@ -3,18 +3,28 @@ package org.padler.natorder;
 import java.util.Comparator;
 import java.util.Objects;
 
+import static org.padler.natorder.Flavor.DEFAULT;
+
 public class NaturalOrderComparator implements Comparator<String> {
 
     private final boolean caseSensitive;
+    private final Flavor flavor;
 
     public NaturalOrderComparator() {
         this.caseSensitive = false;
+        this.flavor = DEFAULT;
     }
 
     public NaturalOrderComparator(boolean caseSensitive) {
         this.caseSensitive = caseSensitive;
+        this.flavor = DEFAULT;
     }
 
+
+    public NaturalOrderComparator(boolean caseSensitive, Flavor flavor) {
+        this.caseSensitive = caseSensitive;
+        this.flavor = flavor;
+    }
 
     private int compareRight(String a, String b) {
         int bias = 0;
@@ -143,17 +153,27 @@ public class NaturalOrderComparator implements Comparator<String> {
     }
 
     private boolean isSpaceOrSeparatorOrEmptyOrSpecial(char c) {
-        return isSpaceOrSeparator(c) || c == '0' || c == '#' || c == '$';
+        switch (flavor) {
+            case SPECIAL_CHARS:
+                return isSpaceOrSeparator(c) || c == '0' ||
+                        (c != Character.MIN_VALUE
+                                && (c < 'A' && !(c >= 48 && c <= 57)
+                        ));
+            case ZERO:
+                return isSpaceOrSeparator(c) || (c != Character.MIN_VALUE && (c < 'A'));
+            default:
+                return isSpaceOrSeparator(c) || c == '0' || c == '#' || c == '$' || c == '*';
+        }
     }
 
     private int compareEqual(String a, String b, int nza, int nzb, String numberA, String numberB) {
         if (!Objects.equals(numberA, numberB)) {
             try {
-            double na = Double.parseDouble(numberA);
-            double nb = Double.parseDouble(numberB);
-            if (!Objects.equals(na, nb))
-                return Double.compare(na, nb);
-        }catch (NumberFormatException e) {
+                double na = Double.parseDouble(numberA);
+                double nb = Double.parseDouble(numberB);
+                if (!Objects.equals(na, nb))
+                    return Double.compare(na, nb);
+            } catch (NumberFormatException e) {
                 // there were special characters so it is NaN
             }
         }

@@ -10,10 +10,9 @@ import java.util.Random;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class NaturalOrderComparatorTest {
+class SpecialCharsFlavorTest {
 
-    private final NaturalOrderComparator naturalOrderComparator = new NaturalOrderComparator(true);
-    private final NaturalOrderComparator naturalInsensitiveComparator = new NaturalOrderComparator(false);
+    private final NaturalOrderComparator naturalOrderComparator = new NaturalOrderComparator(true, Flavor.SPECIAL_CHARS);
 
     private final List<String> sorted = Arrays.asList("1-2", "1-02", "1-20", "10-20", "fred", "jane", "pic01",
             "pic2", "pic02", "pic02a", "pic3", "pic4", "pic 4 else", "pic 5", "pic05",
@@ -115,46 +114,6 @@ class NaturalOrderComparatorTest {
     }
 
     @Test
-    void floats() {
-        List<String> unsorted = Arrays.asList("0.9", "1.0c", "1.2", "1.3", "0.6", "1.1", "0.7", "0.3", "1.0b", "1.0", "0.8", "0.00003");
-        List<String> sorted = Arrays.asList("0.00003", "0.3", "0.6", "0.7", "0.8", "0.9", "1.0", "1.0b", "1.0c", "1.1", "1.2", "1.3");
-
-        unsorted.sort(naturalOrderComparator);
-
-        assertThat(unsorted).isEqualTo(sorted);
-    }
-
-    @Test
-    void prefiedFloats() {
-        List<String> unsorted = Arrays.asList("l0.3", "l0.003");
-        List<String> sorted = Arrays.asList("l0.003", "l0.3");
-
-        unsorted.sort(naturalOrderComparator);
-
-        assertThat(unsorted).isEqualTo(sorted);
-    }
-
-    @Test
-    void suffixedFloats() {
-        List<String> unsorted = Arrays.asList("0.3m", "0.003m");
-        List<String> sorted = Arrays.asList("0.003m", "0.3m");
-
-        unsorted.sort(naturalOrderComparator);
-
-        assertThat(unsorted).isEqualTo(sorted);
-    }
-
-    @Test
-    void preAndSuffixedFloats() {
-        List<String> unsorted = Arrays.asList("l0.3m", "l0.003m");
-        List<String> sorted = Arrays.asList("l0.003m", "l0.3m");
-
-        unsorted.sort(naturalOrderComparator);
-
-        assertThat(unsorted).isEqualTo(sorted);
-    }
-
-    @Test
     void leadingZeroes() {
         List<String> unsorted = Arrays.asList("0003", "03");
         List<String> sorted = Arrays.asList("03", "0003");
@@ -225,26 +184,6 @@ class NaturalOrderComparatorTest {
     }
 
     @Test
-    void versionsWithText() {
-        List<String> unsorted = Arrays.asList("7.1.1.00-SNAPSHOT", "7.2.1.00-SNAPSHOT", "7.2.1.00_DEV-SNAPSHOT", "7.3.1.00-SNAPSHOT", "7.3.1.00_DEV-SNAPSHOT", "7.4.1.00-SNAPSHOT", "7.4.1.00_DEV-SNAPSHOT", "7.4.2.00-SNAPSHOT", "7.4.2.00_DEV-SNAPSHOT", "7.5.1.00-SNAPSHOT", "7.5.1.00_DEV_DEV-SNAPSHOT", "7.5.1.00_DEV-SNAPSHOT", "7.6.1.00-SNAPSHOT", "7.6.1.00_DEV-SNAPSHOT", "7.6.2.00-SNAPSHOT", "7.6.2.00_DEV-SNAPSHOT", "7.0.0.00-SNAPSHOT", "7.0.0.00_DEV-SNAPSHOT", "7.1.0.00-SNAPSHOT", "7.2.0.00-SNAPSHOT", "7.2.0.00_DEV-SNAPSHOT", "7.3.0.00-SNAPSHOT", "7.3.0.00_DEV-SNAPSHOT", "7.4.0.00-SNAPSHOT", "7.4.0.00_DEV-SNAPSHOT", "7.5.0.00-SNAPSHOT", "7.5.0.00_DEV-SNAPSHOT", "7.5.0.00_DEV_DEV-SNAPSHOT");
-        List<String> sorted = Arrays.asList("7.0.0.00-SNAPSHOT", "7.0.0.00_DEV-SNAPSHOT", "7.1.0.00-SNAPSHOT", "7.1.1.00-SNAPSHOT", "7.2.0.00-SNAPSHOT", "7.2.0.00_DEV-SNAPSHOT", "7.2.1.00-SNAPSHOT", "7.2.1.00_DEV-SNAPSHOT", "7.3.0.00-SNAPSHOT", "7.3.0.00_DEV-SNAPSHOT", "7.3.1.00-SNAPSHOT", "7.3.1.00_DEV-SNAPSHOT", "7.4.0.00-SNAPSHOT", "7.4.0.00_DEV-SNAPSHOT", "7.4.1.00-SNAPSHOT", "7.4.1.00_DEV-SNAPSHOT", "7.4.2.00-SNAPSHOT", "7.4.2.00_DEV-SNAPSHOT", "7.5.0.00-SNAPSHOT", "7.5.0.00_DEV-SNAPSHOT", "7.5.0.00_DEV_DEV-SNAPSHOT", "7.5.1.00-SNAPSHOT", "7.5.1.00_DEV-SNAPSHOT", "7.5.1.00_DEV_DEV-SNAPSHOT", "7.6.1.00-SNAPSHOT", "7.6.1.00_DEV-SNAPSHOT", "7.6.2.00-SNAPSHOT", "7.6.2.00_DEV-SNAPSHOT");
-
-        unsorted.sort(naturalOrderComparator);
-
-        assertThat(unsorted).isEqualTo(sorted);
-    }
-
-    @Test
-    void versionsWithText2() {
-        List<String> unsorted = Arrays.asList("V7.1.1.00-SNAPSHOT", "V7.2.1.00-SNAPSHOT", "V7.2.1.00_DEV-SNAPSHOT", "V7.3.1.00-SNAPSHOT", "V7.3.1.00_DEV-SNAPSHOT", "V7.4.1.00-SNAPSHOT", "V7.4.1.00_DEV-SNAPSHOT", "V7.4.2.00-SNAPSHOT", "V7.4.2.00_DEV-SNAPSHOT", "V7.5.1.00-SNAPSHOT", "V7.5.1.00_DEV_DEV-SNAPSHOT", "V7.5.1.00_DEV-SNAPSHOT", "V7.6.1.00-SNAPSHOT", "V7.6.1.00_DEV-SNAPSHOT", "V7.6.2.00-SNAPSHOT", "V7.6.2.00_DEV-SNAPSHOT", "R7.0.0.00-SNAPSHOT", "R7.0.0.00_DEV-SNAPSHOT", "R7.1.0.00-SNAPSHOT", "R7.2.0.00-SNAPSHOT", "R7.2.0.00_DEV-SNAPSHOT", "R7.3.0.00-SNAPSHOT", "R7.3.0.00_DEV-SNAPSHOT", "R7.4.0.00-SNAPSHOT", "R7.4.0.00_DEV-SNAPSHOT", "R7.5.0.00-SNAPSHOT", "R7.5.0.00_DEV-SNAPSHOT", "R7.5.0.00_DEV_DEV-SNAPSHOT");
-        List<String> sorted = Arrays.asList("R7.0.0.00-SNAPSHOT", "R7.0.0.00_DEV-SNAPSHOT", "R7.1.0.00-SNAPSHOT", "R7.2.0.00-SNAPSHOT", "R7.2.0.00_DEV-SNAPSHOT", "R7.3.0.00-SNAPSHOT", "R7.3.0.00_DEV-SNAPSHOT", "R7.4.0.00-SNAPSHOT", "R7.4.0.00_DEV-SNAPSHOT", "R7.5.0.00-SNAPSHOT", "R7.5.0.00_DEV-SNAPSHOT", "R7.5.0.00_DEV_DEV-SNAPSHOT", "V7.1.1.00-SNAPSHOT", "V7.2.1.00-SNAPSHOT", "V7.2.1.00_DEV-SNAPSHOT", "V7.3.1.00-SNAPSHOT", "V7.3.1.00_DEV-SNAPSHOT", "V7.4.1.00-SNAPSHOT", "V7.4.1.00_DEV-SNAPSHOT", "V7.4.2.00-SNAPSHOT", "V7.4.2.00_DEV-SNAPSHOT", "V7.5.1.00-SNAPSHOT", "V7.5.1.00_DEV-SNAPSHOT", "V7.5.1.00_DEV_DEV-SNAPSHOT", "V7.6.1.00-SNAPSHOT", "V7.6.1.00_DEV-SNAPSHOT", "V7.6.2.00-SNAPSHOT", "V7.6.2.00_DEV-SNAPSHOT");
-
-        unsorted.sort(naturalOrderComparator);
-
-        assertThat(unsorted).isEqualTo(sorted);
-    }
-
-    @Test
     void sortTime() {
         List<String> unsorted = Arrays.asList("10:01:00", "10:09:00", "10:10:00", "10:00:00", "10:00:01");
         List<String> sorted = Arrays.asList("10:00:00", "10:00:01", "10:01:00", "10:09:00", "10:10:00");
@@ -265,16 +204,6 @@ class NaturalOrderComparatorTest {
     }
 
     @Test
-    void sortInsensitive() {
-        List<String> unsorted = Arrays.asList("DEF", "abc", "def", "AbC", "123", "12");
-        List<String> sorted = Arrays.asList("12", "123", "abc", "AbC", "DEF", "def");
-
-        unsorted.sort(naturalInsensitiveComparator);
-
-        assertThat(unsorted).isEqualTo(sorted);
-    }
-
-    @Test
     void hyphens() {
         List<String> unsorted = Arrays.asList("a-1", "a1-1", "a2-1");
         List<String> sorted = Arrays.asList("a-1", "a1-1", "a2-1");
@@ -288,6 +217,26 @@ class NaturalOrderComparatorTest {
     void underscores() {
         List<String> unsorted = Arrays.asList("a_1", "a1_1", "a2_1");
         List<String> sorted = Arrays.asList("a_1", "a1_1", "a2_1");
+
+        unsorted.sort(naturalOrderComparator);
+
+        assertThat(unsorted).isEqualTo(sorted);
+    }
+
+    @Test
+    void specialChars() {
+        List<String> unsorted = Arrays.asList("$*", "$#", "$0", "$1", "$2", "$10");
+        List<String> sorted = Arrays.asList("$#", "$*", "$0", "$1", "$2", "$10");
+
+        unsorted.sort(naturalOrderComparator);
+
+        assertThat(unsorted).isEqualTo(sorted);
+    }
+
+    @Test
+    void specialCharsSingle() {
+        List<String> unsorted = Arrays.asList("$", "#", "1", "0", "2");
+        List<String> sorted = Arrays.asList("#", "$", "0", "1", "2");
 
         unsorted.sort(naturalOrderComparator);
 
